@@ -1,0 +1,883 @@
+
+  /* ===== 変数定義 ===== */ 
+  :root {
+    /* キーカラー */
+    --yellow: #F0DB4F;
+    --yellow-transparent: rgba(240, 219, 79, 0.15);
+    --yellow-light: #F7EA9A;
+    --yellow-dark: #E6C700;
+    --teal: #055A68;
+    --teal-light: #0A7A8C;
+    --teal-dark: #033D47;
+    
+    /* ライトモード */
+    --light-primary: var(--yellow);
+    --light-primary-light: var(--yellow-light);
+    --light-primary-dark: var(--yellow-dark);
+    --light-secondary: var(--teal);
+    --light-secondary-light: var(--teal-light);
+    --light-secondary-dark: var(--teal-dark);
+    --light-bg: #FFFFFF;
+    --light-card-bg: #F9FAFB;
+    --light-text: #111827;
+    --light-text-light: #6B7280;
+    --light-border: #E5E7EB;
+    --light-user-msg: var(--teal);
+    --light-ai-msg: #F3F4F6;
+    --light-hover: var(--yellow-transparent);
+    --light-sidebar: #F9FAFB;
+    
+    /* ダークモード */
+    --dark-primary: var(--yellow);
+    --dark-primary-light: var(--yellow-light);
+    --dark-primary-dark: var(--yellow-dark);
+    --dark-secondary: var(--teal-light);
+    --dark-secondary-light: var(--teal);
+    --dark-secondary-dark: var(--teal-dark);
+    --dark-bg: #111827;
+    --dark-card-bg: #1F2937;
+    --dark-text: #F9FAFB;
+    --dark-text-light: #9CA3AF;
+    --dark-border: #374151;
+    --dark-user-msg: #0E7490;
+    --dark-ai-msg: #1F2937;
+    --dark-hover: rgba(240, 219, 79, 0.2);
+    --dark-sidebar: #1E293B;
+    
+    --shadow-light: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-dark: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.12);
+  }
+  
+  /* ===== 基本スタイル ===== */
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', Meiryo, sans-serif;
+    transition: background-color 0.3s, color 0.3s;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body.dark-mode {
+    background-color: var(--dark-bg);
+    color: var(--dark-text);
+  }
+  
+  /* ===== テーマ設定 ===== */
+  .app-container {
+    width: 100vw; /* ← 横幅を確実に全体へ広げる */
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    transition: background-color 0.3s, color 0.3s;
+    overflow: hidden;
+  }
+  
+  .light {
+    --primary: var(--light-primary);
+    --primary-light: var(--light-primary-light);
+    --primary-dark: var(--light-primary-dark);
+    --secondary: var(--light-secondary);
+    --secondary-light: var(--light-secondary-light);
+    --secondary-dark: var(--light-secondary-dark);
+    --bg: var(--light-bg);
+    --card-bg: var(--light-card-bg);
+    --text: var(--light-text);
+    --text-light: var(--light-text-light);
+    --border: var(--light-border);
+    --user-msg: var(--light-user-msg);
+    --ai-msg: var(--light-ai-msg);
+    --hover: var(--light-hover);
+    --shadow: var(--shadow-light);
+    --sidebar-bg: var(--light-sidebar);
+    background-color: var(--bg);
+    color: var(--text);
+  }
+  
+  .dark {
+    --primary: var(--dark-primary);
+    --primary-light: var(--dark-primary-light);
+    --primary-dark: var(--dark-primary-dark);
+    --secondary: var(--dark-secondary);
+    --secondary-light: var(--dark-secondary-light);
+    --secondary-dark: var(--dark-secondary-dark);
+    --bg: var(--dark-bg);
+    --card-bg: var(--dark-card-bg);
+    --text: var(--dark-text);
+    --text-light: var(--dark-text-light);
+    --border: var(--dark-border);
+    --user-msg: var(--dark-user-msg);
+    --ai-msg: var(--dark-ai-msg);
+    --hover: var(--dark-hover);
+    --shadow: var(--shadow-dark);
+    --sidebar-bg: var(--dark-sidebar);
+    background-color: var(--bg);
+    color: var(--text);
+  }
+  
+  /* ===== レイアウト ===== */
+  .main-container {
+    display: flex;
+    flex: 1;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  /* サイドバー */
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    width: 280px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    z-index: 1000;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s ease;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0);
+  }
+  
+  /* オーバーレイ（新規追加） */
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    animation: fadeIn 0.3s forwards;
+    backdrop-filter: blur(2px);
+  }
+  
+  .sidebar-header {
+    padding: 1.5rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  
+  .app-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    color: var(--text);
+    letter-spacing: -0.025em;
+  }
+  
+  .user-info {
+    color: var(--text-light);
+    font-size: 0.875rem;
+    margin-bottom: 1.25rem;
+    opacity: 0.9;
+  }
+  
+  .sidebar-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    margin-top: 1rem;
+  }
+  
+  .settings-panel {
+    margin-top: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  .settings-button {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.75rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+    font-size: 0.875rem;
+  }
+  
+  .settings-button:hover {
+    background: var(--hover);
+    transform: translateY(-2px);
+  }
+  
+  .sidebar-content { 
+    flex: 1; 
+    padding: 1.5rem 1.25rem; 
+    overflow-y: auto; 
+    min-height: 100px; /* ← この行を追加 */
+    max-height: calc(100vh - 200px);
+  }
+  
+  .sidebar-footer {
+    flex-shrink: 0;
+    padding: 1rem 1.25rem;
+    font-size: 0.75rem;
+    color: var(--text-light);
+    text-align: center;
+    border-top: 1px solid var(--border);
+    margin-top: auto; 
+    background-color: var(--sidebar-bg);
+  }
+  
+  /* 閉じるボタン (ハンバーガーメニュー) */
+  .sidebar-close-button {
+    display: none; /* デフォルトでは非表示 */
+  }
+  
+  /* ハンバーガーメニューボタン (サイドバー非表示時) */
+  .sidebar-toggle {
+    position: fixed;
+    top: 1rem;
+    left: 0.5rem;
+    z-index: 101;
+    background: var(--bg);
+    color: #333;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none !important;
+    cursor: pointer;
+    box-shadow: none !important;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    font-size: 28px;
+    font-weight: bold;
+    line-height: 1;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent !important;
+    outline: none !important;
+    user-select: none !important;
+    opacity: 0; /* 初期状態は非表示 */
+    animation: fadeInButton 0.3s ease forwards; /* フェードインアニメーション */
+  }
+  
+  /* ホバー効果は残しておく */
+  .sidebar-toggle:hover {
+    transform: scale(1.1);
+  }
+  
+  .sidebar-toggle:active {
+    transform: scale(0.95);
+  }
+  
+  /* フェードインアニメーションの定義 */
+  @keyframes fadeInButton {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  
+  .sidebar-section {
+    margin-bottom: 2rem;
+  }
+  
+  .sidebar-section h3 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-light);
+    margin-bottom: 0.875rem;
+    font-weight: 600;
+  }
+  
+  .prompt-list li, .history-list li {
+    padding: 0.875rem 1rem;
+    margin-bottom: 0.625rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.875rem;
+    color: var(--text);
+    list-style-type: none;
+    border: 1px solid transparent;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    background-color: var(--bg);
+  }
+  
+  .prompt-list li:hover, .history-list li:hover {
+    background-color: var(--hover);
+    border-color: var(--border);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  }
+  
+  .history-list li {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .history-date {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    margin-bottom: 0.25rem;
+  }
+  
+  .history-query {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 500;
+  }
+  
+  /* メインコンテンツエリア */
+  .content-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg);
+    overflow-y: auto;
+    padding: 0;
+  }
+  
+  .chat-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 800px;
+    height: 100%;
+    background-color: var(--bg);
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .chat-wrapper {
+    margin-left: 280px; /* サイドバー分の余白を確保 */
+    width: calc(100vw - 280px); /* 残りの幅をチャットに */
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    background-color: var(--bg); /* 白背景にする */
+    overflow: hidden;
+  }
+  
+  /* メッセージ表示エリア */
+  .messages-container {
+    flex: 1;
+    padding: 1.5rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    position: relative;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+    width: 100%;
+  }
+  
+  .messages-container::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .messages-container::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .messages-container::-webkit-scrollbar-thumb {
+    background-color: var(--border);
+    border-radius: 6px;
+  }
+  
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--text-light);
+    text-align: center;
+    padding: 2rem;
+    animation: fadeIn 0.5s ease;
+  }
+  
+  .empty-icon {
+    margin-bottom: 2rem;
+    opacity: 0.7;
+    color: var(--secondary);
+    transform: scale(1.2);
+  }
+  
+  .empty-suggestions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .empty-suggestions button {
+    background: var(--primary);
+    color: var(--text);
+    border: none;
+    border-radius: 24px;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    box-shadow: var(--shadow);
+    font-size: 0.875rem;
+  }
+  
+  .empty-suggestions button:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .empty-suggestions button:active {
+    transform: translateY(0);
+  }
+  
+  /* メッセージ */
+  .message {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    max-width: 85%;
+    animation: messageAppear 0.3s ease-out;
+  }
+  
+  @keyframes messageAppear {
+    from { 
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to { 
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .user-message {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+    margin-left: auto;
+  }
+  
+  .ai-message {
+    align-self: flex-start;
+    margin-right: auto;
+  }
+  
+  .message-avatar {
+    min-width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    padding: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .user-message .message-avatar {
+    background: var(--secondary);
+    color: white;
+  }
+  
+  .ai-message .message-avatar {
+    background: var(--primary);
+    color: var(--text);
+  }
+  
+  .message-content {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .message-bubble {
+    padding: 1rem 1.25rem;
+    border-radius: 18px;
+    line-height: 1.6;
+    position: relative;
+    white-space: pre-wrap;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease;
+  }
+  
+  .user-message .message-bubble {
+    background: var(--user-msg);
+    color: white;
+    border-bottom-right-radius: 4px;
+  }
+  
+  .user-message .message-time {
+    align-self: flex-end;
+  }
+  
+  .ai-message .message-bubble {
+    background: var(--ai-msg);
+    border-bottom-left-radius: 4px;
+  }
+  
+  .message:hover .message-bubble {
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  .message-time {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    margin-top: 0.375rem;
+  }
+  
+  /* ローディング */
+  .loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 80px;
+    min-height: 32px;
+  }
+  
+  .loading-dot {
+    background-color: var(--text-light);
+    border-radius: 50%;
+    width: 8px;
+    height: 8px;
+    margin: 0 4px;
+    animation: bounce 1.5s infinite ease-in-out;
+    opacity: 0.7;
+  }
+  
+  .loading-dot:nth-child(1) {
+    animation-delay: 0s;
+  }
+  
+  .loading-dot:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  
+  .loading-dot:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+  
+  @keyframes bounce {
+    0%, 80%, 100% { 
+      transform: translateY(0);
+    }
+    40% { 
+      transform: translateY(-8px);
+    }
+  }
+  
+  /* 入力エリア */
+  .input-container {
+    padding: 1.5rem;
+    display: flex;
+    position: relative;
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+    z-index: 10;
+    width: 100%;
+    background: var(--bg);
+  }
+  
+  input {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    border: none;
+    border-radius: 24px;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s;
+    background: var(--card-bg);
+    color: var(--text);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1), inset 0 1px 2px rgba(0, 0, 0, 0.05);
+    width: 100%;
+  }
+  
+  input:focus {
+    box-shadow: 0 0 0 3px rgba(5, 90, 104, 0.3), 0 2px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+  }
+  
+  input::placeholder {
+    color: var(--text-light);
+    opacity: 0.7;
+  }
+  
+  .send-button {
+    background: var(--primary);
+    color: var(--text);
+    border: none;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    margin-left: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow);
+  }
+  
+  .send-button:hover {
+    background: var(--primary-dark);
+    transform: translateY(-3px) rotate(5deg);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .send-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .send-button:disabled {
+    background: #CBD5E1;
+    cursor: not-allowed;
+    opacity: 0.6;
+    transform: none;
+    box-shadow: none;
+  }
+  
+  /* ボタン共通スタイル */
+  .icon-button {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+  }
+  
+  .icon-button:hover {
+    background: var(--hover);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  .user-button {
+    padding-right: 1rem;
+  }
+  
+  /* モバイル用サイドバー切り替え */
+  .sidebar-toggle {
+    position: fixed;
+    top: 1rem;
+    left: 0.5rem; /* 左側の余白を少し追加 */
+    z-index: 101;
+    background: var(--bg); /* 白背景 */
+    color: #333; /* テキストを濃いグレーに */
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none !important; /* ボーダーを追加 */
+    cursor: pointer;
+    box-shadow: none !important;
+    transition: all 0.3s ease;
+    font-size: 28px; /* 文字サイズを調整 */
+    font-weight: bold; /* 太字にする */
+    line-height: 1; /* 行の高さを調整 */
+    padding: 0; /* すべてのパディングをリセット */
+    -webkit-tap-highlight-color: transparent !important;
+    outline: none !important;
+    user-select: none !important;
+  }
+  
+  .sidebar-toggle:hover {
+    transform: scale(1.1);
+  }
+  
+  .sidebar-toggle:active {
+    transform: scale(0.95);
+  }
+  
+  
+  /* サイドバーの開閉アニメーション */
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
+    animation: slideIn 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  
+  .sidebar.closed {
+    transform: translateX(-100%);
+    box-shadow: none;
+  }
+  
+  /* スライドインアニメーション（新規追加） */
+  @keyframes slideIn {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+  }
+  
+  /* レスポンシブデザイン */
+  @media (max-width: 1200px) {
+    .chat-container {
+      max-width: 700px;
+    }
+  }
+  
+  @media (max-width: 992px) {
+    .chat-container {
+      max-width: 90%;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .sidebar-close-button {
+      display: flex;           /* flexbox表示に変更 */
+      align-items: center;     /* 垂直方向の中央揃え */
+      justify-content: center; /* 水平方向の中央揃え */
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      background-color: transparent !important;
+      width: 40px;               /* 幅を固定 - 正方形サイズ */
+      height: 40px;              /* 高さを固定 - 正方形サイズ */
+      border: none;
+      border-radius: 8px;
+      color: var(--text);
+      cursor: pointer;
+      z-index: 1001;
+      box-shadow: none !important;
+      padding: 0;
+       -webkit-tap-highlight-color: transparent !important;
+      outline: none !important;
+      user-select: none !important;
+    }
+  
+    /* アイコン自体のサイズ調整 */
+    .sidebar-close-button svg {
+      width: 24px;
+      height: 24px;
+      margin-top: 10px;
+    }
+   
+    .sidebar.open {
+      width: 85%;
+      max-width: 320px;
+    }
+  
+    .sidebar.closed {
+      transform: translateX(-100%);
+      box-shadow: none;
+      display: block; /* ← これを追加 */
+    }
+  
+    .sidebar-toggle {
+      display: flex; /* ハンバーガー表示 */
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      z-index: 1000;
+    }
+  
+    .chat-wrapper {
+      margin-left: 0 !important;
+      width: 100vw !important;
+    }
+    
+    .sidebar-toggle {
+      transition: all 0.3s ease;
+    }
+    
+    .content-wrapper {
+      width: 100%;
+    }
+    
+    .chat-container {
+      max-width: 100% !important;
+      padding: 0 1rem;
+    }
+  
+    .messages-container, .input-container {
+      padding: 1rem;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .message {
+      max-width: 95%;
+    }
+    
+    .input-container {
+      padding: 0.75rem;
+    }
+    
+    input {
+      padding: 0.75rem 1rem;
+      font-size: 0.95rem;
+    }
+    
+    .send-button {
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+    }
+    
+    .empty-suggestions {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .empty-suggestions button {
+      width: 100%;
+    }
+  }
+  
+  @media (max-width: 768px) { 
+    .sidebar-close-button { 
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      background-color: var(--primary);
+      color: var(--text);
+      width: 36px;
+      height: 36px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      z-index: 1001;
+      transition: all 0.2s ease;
+    }
+  
+    .sidebar-close-button:hover {
+      transform: scale(1.1);
+      background-color: transparent; 
+    }
+  }
+      
